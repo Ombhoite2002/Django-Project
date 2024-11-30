@@ -1,0 +1,223 @@
+{% load bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-card {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-card .card {
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+            color: white;
+        }
+
+        .stats-card .total-tasks {
+            background-color: #0d6efd; /* Primary Blue */
+        }
+
+        .stats-card .completed-tasks {
+            background-color: #28a745; /* Green */
+        }
+
+        .stats-card .pending-tasks {
+            background-color: #ffc107; /* Yellow */
+        }
+
+        .stats-card .failed-tasks {
+            background-color: #dc3545; /* Red */
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle the status button clicks
+            const buttons = document.querySelectorAll('.status-btn');
+        
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const taskId = this.dataset.taskId;  // Get task ID
+                    const newStatus = this.dataset.newStatus;  // Get new status (Completed or Failed)
+        
+                    // Send an AJAX request to update the task status
+                    fetch("{% url 'update_task_status' %}", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',  // CSRF token for protection
+                        },
+                        body: JSON.stringify({
+                            task_id: taskId,
+                            status: newStatus,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // If the update is successful, update the task status in the table
+                            const taskRow = this.closest('tr');
+                            const statusCell = taskRow.querySelector('td:nth-child(5)');  // Status column
+        
+                            // Update the status badge
+                            statusCell.innerHTML = `<span class="badge 
+                                                        ${newStatus === 'Completed' ? 'bg-success' : 'bg-danger'}">
+                                                        ${newStatus}
+                                                    </span>`;
+                            // Hide the buttons (optional)
+                            this.style.display = 'none';
+        
+                            // Optionally hide the other status button if it exists
+                            const otherButton = taskRow.querySelector(`button[data-new-status="${newStatus === 'Completed' ? 'Failed' : 'Completed'}"]`);
+                            if (otherButton) {
+                                otherButton.style.display = 'none';
+                            }
+                        } else {
+                            alert('Failed to update task status');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating task status:", error);
+                    });
+                });
+            });
+        });
+        
+    </script>
+</head>
+<body class="bg-dark text-white">
+    <div class="container my-5">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header mb-4">
+            <h1>Welcome to Your Dashboard, {{ employee_name }}</h1>
+            <a class="btn btn-primary" href="{% url 'employeeprofile' %}">View Profile</a>
+            <a class="btn btn-danger" href="{% url 'employee_logout' %}">Logout</a>
+        </div>
+
+        <!-- Task Statistics -->
+        <div class="stats-card">
+            <div class="card total-tasks">
+                <h4>Total Tasks</h4>
+                <p>{{ total_tasks }}</p>
+            </div>
+            <div class="card completed-tasks">
+                <h4>Completed Tasks</h4>
+                <p>{{ completed_tasks }}</p>
+            </div>
+            <div class="card pending-tasks">
+                <h4>Pending Tasks</h4>
+                <p>{{ pending_tasks }}</p>
+            </div>
+            <div class="card failed-tasks">
+                <h4>Failed Tasks</h4>
+                <p>{{ failed_tasks }}</p>
+            </div>
+        </div>
+
+        <!-- Task List Table -->
+        {% if tasks %}
+            <div class="table-responsive">
+                <table class="table table-dark table-bordered text-center">
+                    <thead class="table-light text-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td class="text-truncate" style="max-width: 150px;">{{ task.task_name }}</td>
+        <td class="text-truncate" style="max-width: 300px;">{{ task.task_description }}</td>
+        <td>{{ task.due_date }}</td>
+        <td>
+            <!-- Display task status with a badge and descriptive text -->
+            <span class="badge 
+                {% if task.status == 'Completed' %}bg-success
+                {% elif task.status == 'In Progress' %}bg-warning
+                {% else %}bg-danger{% endif %}">
+                {{ task.status }}
+            </span>
+            <br>
+            <!-- Only show buttons if task is not Completed or Failed -->
+            {% if task.status != 'Completed' and task.status != 'Failed' %}
+                <button class="btn btn-sm btn-success status-btn" 
+                        data-task-id="{{ task.id }}" 
+                        data-new-status="Completed">
+                    ✅
+                </button>
+                
+                <button class="btn btn-sm btn-danger status-btn" 
+                        data-task-id="{{ task.id }}" 
+                        data-new-status="Failed">
+                    ❌
+                </button>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                No tasks have been assigned to you yet. Please check back later.
+            </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; {{ current_year }} Employee Dashboard. Built with ❤️ using Django and Bootstrap 5. 
+            <a href="#">Privacy Policy</a> | <a href="#">Terms</a></p>
+        </div>
+    </div>
+</body>
+</html>

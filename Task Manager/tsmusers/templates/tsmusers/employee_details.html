@@ -1,0 +1,49 @@
+{% extends "admin_sidebar.html" %}
+
+{% block title %}
+    Employees Details
+{% endblock %}
+
+{% block admincontent %}
+    <h1>Employees Details</h1>
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-3">
+        <div class="d-flex">
+            <input type="text" name="search" class="form-control" placeholder="Search by name, username, email, role, phone" value="{{ request.GET.search }}">
+            <button type="submit" class="btn btn-primary ms-2">Search</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr class="bg-primary text-white">
+                <th style="width: 5%;">Sno</th>
+                <th>Employee name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Phone Number</th>
+                <th>View Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr class="bg-dark text-white">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ employee.profile.first_name }} {{ employee.profile.last_name }}</td>
+                <td>{{ employee.username }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.profile.role }}</td>
+                <td>{{ employee.profile.phone_number }}</td>
+                <td><a class='btn btn-primary' href="{% url 'viewprofile' employee.id %}">View Profile</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-white bg-warning">No employees found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+{% endblock %}

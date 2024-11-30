@@ -1,0 +1,61 @@
+/* Hide the scrollbar */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Sidebar styles */
+.sidebar {
+    background-color: #343a40;
+    height: 100vh;
+    padding: 20px;
+    position: fixed; /* Ensure sidebar is fixed on the left */
+    top: 0;
+    left: 0;
+    width: 250px; /* Set sidebar width */
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* Sidebar link styles */
+.sidebar a {
+    color: #adb5bd;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect */
+.sidebar a:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+/* Active effect (stay after click) */
+.sidebar a.active,
+.sidebar a.active:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+/* Main content styles */
+.main-content {
+    margin-left: 270px;
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-footer a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
