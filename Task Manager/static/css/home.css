@@ -1,4 +1,4 @@
-/* Custom Styles */
+
 body, html {
     background-color: #f4f6f9;
     font-family: 'Arial', sans-serif;
@@ -68,7 +68,7 @@ footer {
     margin-top: 50px;
 }
 
-/* Responsive Styling */
+
 @media (max-width: 768px) {
     .display-4 {
         font-size: 2.5rem;

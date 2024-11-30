@@ -8,7 +8,7 @@ class Employee(models.Model):
     password = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
-        # Normalize email to lowercase before saving
+        
         self.email = self.email.lower()
         super().save(*args, **kwargs)
 
@@ -20,7 +20,7 @@ class EmployeeProfile(models.Model):
     employee = models.OneToOneField(
         Employee, 
         on_delete=models.CASCADE, 
-        related_name='profile'  # Add a related_name for reverse access
+        related_name='profile' 
     )
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
