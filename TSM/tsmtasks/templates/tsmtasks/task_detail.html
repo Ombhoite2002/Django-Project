@@ -1,0 +1,119 @@
+{% extends "admin_sidebar.html" %}
+
+{% block title %}
+    Task Details
+{% endblock %}
+
+{% block admincontent %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Task Management</h1>
+        <a class="btn btn-primary" href="{% url "taskcreate" %}">Assign Tasks</a>
+    </div>
+    
+    <!-- Filter and Search Form -->
+    <div class="mb-3 d-flex align-items-center">
+        <!-- Priority Dropdown -->
+        <div class="dropdown me-2">
+            <button
+                class="btn btn-outline-primary dropdown-toggle"
+                type="button"
+                id="priorityDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Priority
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="priorityDropdown">
+                <li><a class="dropdown-item" href="?sort_by=priority&priority=Urgent">Urgent</a></li>
+                <li><a class="dropdown-item" href="?sort_by=priority&priority=High">High</a></li>
+                <li><a class="dropdown-item" href="?sort_by=priority&priority=Medium">Medium</a></li>
+                <li><a class="dropdown-item" href="?sort_by=priority&priority=Low">Low</a></li>
+            </ul>
+        </div>
+    
+        <!-- Role Dropdown -->
+        <div class="dropdown me-2">
+            <button
+                class="btn btn-outline-primary dropdown-toggle"
+                type="button"
+                id="roleDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Role
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="roleDropdown">
+                {% for role in distinct_roles %}
+                    <li><a class="dropdown-item" href="?sort_by=role&role={{ role }}">{{ role }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    
+        <!-- Status Dropdown -->
+        <div class="dropdown me-2">
+            <button
+                class="btn btn-outline-primary dropdown-toggle"
+                type="button"
+                id="statusDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Status
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                <li><a class="dropdown-item" href="?sort_by=status&status=Completed">Completed</a></li>
+                <li><a class="dropdown-item" href="?sort_by=status&status=In Progress">In Progress</a></li>
+                <li><a class="dropdown-item" href="?sort_by=status&status=Failed">Failed</a></li>
+            </ul>
+        </div>
+    
+        <p>Currently sorted by: <strong>{{ request.GET.sort_by|default:"None" }}</strong></p>
+    </div>
+
+    <!-- Display Employee and Task Information -->
+    <h2>Total Employees: {{ total_employees }}</h2>
+{% if total_employees == 0 %}
+    <p>No tasks assigned to this employee</p>
+{% else %}
+    {% for employee in employees %}
+        {% if employee.task_set.exists %}
+            <p>Tasks are assigned to {{ employee.first_name }} {{ employee.last_name }}.</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Assigned To</th>
+                <th>Role</th> <!-- Role Column -->
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr style="color: white;">
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.assigned_employees.first_name }} {{ task.assigned_employees.last_name }}</td>
+                    <td>{{ task.assigned_employees.role }}</td> <!-- Display Role -->
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.due_date }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>
+                        <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'taskdelete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+
+
+

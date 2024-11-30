@@ -1,0 +1,49 @@
+{% load bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+            Login
+        {% endblock %}
+    </title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body class="bg-dark text-white">
+        
+        {% block content %}
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Login</h2>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="role" class="form-label">Login As</label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="employee">Employee</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Log In</button>
+            </form>
+            <p class="text-center mt-3">
+                Don't have an account? 
+                <a href="{% url 'signup' %}" class="text-decoration-none text-primary">Sign up</a>
+            </p>
+        </div>
+        {% endblock %}
+
+</body>
+</html>

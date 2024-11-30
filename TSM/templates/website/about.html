@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero text-white text-center">
+    <div class="container py-5">
+        <h1>About Us</h1>
+        <p class="lead">Discover who we are and what we stand for. Our journey, values, and mission define our purpose.</p>
+        <button class="btn btn-primary mt-3">Learn More</button>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about py-5 bg-dark">
+    <div class="container">
+        <h2 class="text-center mb-4">Who We Are</h2>
+        <p class="text-center mb-5">We are a team dedicated to making a difference by delivering exceptional services and fostering meaningful relationships with our clients.</p>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <i class="bi bi-person-circle display-4 text-primary"></i>
+                <h4 class="mt-3">Our Mission</h4>
+                <p>To provide innovative solutions that drive progress and success.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-award-fill display-4 text-primary"></i>
+                <h4 class="mt-3">Our Vision</h4>
+                <p>To be a global leader in our industry, setting the standard for excellence.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-heart-fill display-4 text-primary"></i>
+                <h4 class="mt-3">Our Values</h4>
+                <p>Integrity, innovation, and a commitment to quality in everything we do.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Meet Our Team</h2>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Team Member" class="rounded-circle mb-3">
+                <h5>John Doe</h5>
+                <p>CEO & Founder</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Team Member" class="rounded-circle mb-3">
+                <h5>Jane Smith</h5>
+                <p>CTO</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Team Member" class="rounded-circle mb-3">
+                <h5>Sam Wilson</h5>
+                <p>Lead Designer</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

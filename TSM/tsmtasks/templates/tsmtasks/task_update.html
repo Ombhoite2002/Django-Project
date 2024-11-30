@@ -1,0 +1,110 @@
+{% load bootstrap5 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Task</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <style>
+        body::-webkit-scrollbar {
+            display: none; 
+        }
+        body {
+            background-color: #212529;
+            color: #fff;
+            overflow-y: auto;
+        }
+        .container {
+            max-width: 600px;
+            background: #343a40;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h2 {
+            font-weight: 700;
+            color: #fff;
+        }
+        .form-control, .form-select {
+            background-color: #495057;
+            color: #fff;
+            border: 1px solid #6c757d;
+            border-radius: 6px;
+        }
+        .form-control::placeholder, .form-select::placeholder {
+            color: #adb5bd;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #495057;
+            border-color: #0d6efd;
+            box-shadow: none;
+        }
+        label {
+            color: #adb5bd;
+        }
+        .btn-primary {
+            background: #0d6efd;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #0b5ed7;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Update Task</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group mb-3">
+                <label for="task_name" class="form-label text-light">Task Name</label>
+                <input type="text" class="form-control" id="task_name" name="task_name" value="{{ task.task_name }}" placeholder="Enter task name" required>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="task_description" class="form-label text-light">Task Description</label>
+                <textarea class="form-control" id="task_description" name="task_description" rows="4" placeholder="Enter task description" required>{{ task.task_description }}</textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="assign_to" class="form-label text-light">Assign To</label>
+                <select class="form-select" id="assign_to" name="assign_to" required>
+                    <option value="">Select a team member</option>
+                    {% for profile in employee_profiles %}
+                        <option value="{{ profile.id }}" {% if profile.id == task.assigned_employee_profile.id %} selected {% endif %}>
+                            {{ profile.first_name }} {{ profile.last_name }} - {{ profile.role }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="priority" class="form-label text-light">Priority</label>
+                <select class="form-select" id="priority" name="priority" required>
+                    <option value="urgent" {% if task.priority == 'urgent' %}selected{% endif %}>Urgent</option>
+                    <option value="high" {% if task.priority == 'high' %}selected{% endif %}>High</option>
+                    <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="due_date" class="form-label text-light">Due Date</label>
+                <input type="date" class="form-control" id="due_date" name="due_date" value="{{ task.due_date }}" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Update Task</button>
+        </form>
+    </div>
+</body>
+</html>

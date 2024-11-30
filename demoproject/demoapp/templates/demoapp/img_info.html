@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}demoapp home page{% endblock %}
+
+{% block content %}
+    <h1 class="text-center text-primary display-4 mb-4">Details</h1>
+
+    <!-- Outer container with flexbox -->
+    <div class="d-flex align-items-center justify-content-between mx-5 p-4 bg-light rounded-lg shadow-lg">
+
+        <!-- First inner div for the image, aligned to the left -->
+        <div class="flex-shrink-0 w-50">
+            <img src="{{ photo.image.url }}" alt="{{ photo.name }}" class="img-fluid rounded-lg shadow-md">
+        </div>
+
+        <!-- Second inner div for text, aligned to the right -->
+        <div class="w-50 ms-3">
+            <div class="mb-3">
+                <h1 class="display-5 text-primary">{{ photo.name }}</h1>
+            </div>
+            <p class="text-muted">{{ photo.img_Info }}</p>
+        </div>
+        
+    </div>
+
+    <div class="mx-5 mt-5 p-4 bg-light rounded-lg shadow-lg">
+        <h2 class="h4 text-primary mb-4">Comments</h2>
+        
+        <!-- Loop through and display each comment -->
+        {% for comment in photo.image_reviews.all %}
+            <div class="mb-3 p-3 bg-white rounded-lg shadow-sm">
+                <p class="text-dark">{{ comment.comment }}</p>
+                <p class="text-muted small">Posted by: {{ comment.user.name }}</p>
+            </div>
+        {% empty %}
+            <p class="text-muted">No comments available.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "admin_sidebar.html" %}
+
+{% block title %}
+    Employees Details
+{% endblock %}
+
+{% block admincontent %}
+    <h1>Employee Profile</h1>
+
+    <div class="profile-info">
+        <p><strong>Employee Username:</strong> {{ employee.username }}</p>
+        <p><strong>Employee Username:</strong> {{ employee.email }}</p>
+        <p><strong>Full Name:</strong> {{ profile.first_name }} {{ profile.middle_name }} {{ profile.last_name }}</p>
+        <p><strong>Age:</strong> {{ profile.age }}</p>
+        <p><strong>Gender:</strong> {{ profile.gender }}</p>
+        <p><strong>Role:</strong> {{ profile.role }}</p>
+        <p><strong>Address:</strong> {{ profile.address }}</p>
+        <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+    </div>
+
+    <h2>Assigned Tasks</h2>
+
+    {% if tasks %}
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>Task Name</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr class="bg-dark text-white">
+                        <td>{{ task.task_name }}</td>
+                        <td>{{ task.priority }}</td>
+                        <td>{{ task.due_date }}</td>
+                        <td>{{ task.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tasks assigned to this employee.</p>
+    {% endif %}
+
+    
+{% endblock %}
